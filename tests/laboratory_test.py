@@ -59,7 +59,7 @@ def test_add_unknown_substance():
         l.add("vsfd", 12.456)
 
     # Assert
-    assert str(result) == "No such substance in stock"
+    assert str(result.value) == "No such substance in stock"
 
 
 def test_add_negative_number():
@@ -72,7 +72,7 @@ def test_add_negative_number():
         l.add("toto", -854)
 
     # Assert
-    assert str(result) == "Impossible to add negative quantities"
+    assert str(result.value) == "Impossible to add negative quantities"
 
 
 def test_add_too_precise_number():
@@ -85,7 +85,7 @@ def test_add_too_precise_number():
         l.add("toto", 8.785412569854)
 
     # Assert
-    assert str(result) == "The quantity must be rounded to a maximum of four decimal places."
+    assert str(result.value) == "The quantity must be rounded to a maximum of four decimal places."
 
 
 def test_add_invalid_parameter_type():
@@ -98,4 +98,4 @@ def test_add_invalid_parameter_type():
         l.add("toto", "2")
 
     # Assert
-    assert str(result) == "The quantity must be a float and substance must be string"
+    assert str(result.value) == "The quantity must be a float and substance must be string"
