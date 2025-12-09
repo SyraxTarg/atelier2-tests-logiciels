@@ -47,6 +47,18 @@ def test_add():
 
     # Assert
     assert quantity == {"name": "toto", "quantity": 12}
+    
+    
+def test_add_decimal():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    quantity = l.add("toto", 12.1236)
+
+    # Assert
+    assert quantity == {"name": "toto", "quantity": 12.1236}
 
 
 def test_add_unknown_substance():

@@ -18,44 +18,37 @@ class Laboratory():
             )
 
     def getQuantity(self, substance: str)-> float:
-        found_substance = ""
-        index = -1
-        for s in self.stock:
-            index += 1
-            if s["name"] == substance:
-                found_substance = s
-                break
-        if found_substance == "":
-            raise Exception("No such substance in stock")
+        index = self.check_existent_substance(substance)
 
         quantity = self.stock[index]["quantity"]
         return quantity
 
-
-    def add(self, substance: str, quantity: int)->dict:
-
-        d = decimal.Decimal(str(quantity))
+    def check_decimal_number(self, number: float | int):
+        d = decimal.Decimal(str(number))
         if d.as_tuple().exponent < -4:
-            print(d.as_tuple().exponent)
             raise Exception("The quantity must be rounded to a maximum of four decimal places.")
 
-        if (type(quantity) != float and type(quantity) != int) or type(substance) != str:
-            raise Exception("The quantity must be a float and substance must be string")
-
-        if quantity < 0:
-            raise Exception("Impossible to add negative quantities")
-
+    def check_existent_substance(self, substance: str)->int:
         found_substance = ""
         index = -1
         for s in self.stock:
             index += 1
             if s["name"] == substance:
-                found_substance = s
-                break
+                return index
         if found_substance == "":
             raise Exception("No such substance in stock")
 
-        return {"name": "toto", "quantity": 12}
+    def add(self, substance: str, quantity: int)->dict:
+
+        self.check_decimal_number(quantity)
+        if (type(quantity) != float and type(quantity) != int) or type(substance) != str:
+            raise Exception("The quantity must be a float and substance must be string")
+        if quantity < 0:
+            raise Exception("Impossible to add negative quantities")
+
+        index = self.check_existent_substance(substance)
+        self.stock[index]["quantity"] = quantity
+        return self.stock[index]
 
 
 substances = [
