@@ -35,3 +35,67 @@ def test_get_quantity_error():
 
     # Assert
     assert str(result.value) == "No such substance in stock"
+
+
+def test_add():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    quantity = l.add("toto", 12)
+
+    # Assert
+    assert quantity == {"name": "toto", "quantity": 12}
+
+
+def test_add_unknown_substance():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.add("vsfd", 12.456)
+
+    # Assert
+    assert str(result) == "No such substance in stock"
+
+
+def test_add_negative_number():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.add("toto", -854)
+
+    # Assert
+    assert str(result) == "Impossible to add negative quantities"
+
+
+def test_add_too_precise_number():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.add("toto", 8.785412569854)
+
+    # Assert
+    assert str(result) == "The quantity must be rounded to a maximum of four decimal places."
+
+
+def test_add_invalid_parameter_type():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.add("toto", "2")
+
+    # Assert
+    assert str(result) == "The quantity must be a float and substance must be string"
