@@ -1,7 +1,7 @@
 import pytest
 from main import Laboratory
 
-def test_init_labo():
+def test_init_labo_empty():
     #Arrange
     substances = []
 
@@ -22,3 +22,16 @@ def test_get_quantity():
     result = l.getQuantity("toto")
     # Assert
     assert result == 0
+
+
+def test_get_quantity_error():
+    #Arrange
+    substances = ["toto", "tata"]
+    l = Laboratory(substances)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.getQuantity("totjo")
+
+    # Assert
+    assert str(result.value) == "No such substance in stock"
