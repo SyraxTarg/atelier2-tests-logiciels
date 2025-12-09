@@ -4,10 +4,13 @@ from main import Laboratory
 def test_init_labo_empty():
     #Arrange
     substances = []
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
 
     # Act
     with pytest.raises(Exception) as result:
-        Laboratory(substances)
+        Laboratory(substances, reactions)
 
     # Assert
     assert str(result.value) == "List can't be empty"
@@ -16,7 +19,10 @@ def test_init_labo_empty():
 def test_get_quantity():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     result = l.getQuantity("toto")
@@ -27,32 +33,41 @@ def test_get_quantity():
 def test_get_quantity_error():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     with pytest.raises(Exception) as result:
         l.getQuantity("totjo")
 
     # Assert
-    assert str(result.value) == "No such substance in stock"
+    assert str(result.value) == "No such substance in stock or reactions"
 
 
 def test_add():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     quantity = l.add("toto", 12)
 
     # Assert
     assert quantity == {"name": "toto", "quantity": 12}
-    
-    
+
+
 def test_add_decimal():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     quantity = l.add("toto", 12.1236)
@@ -64,20 +79,26 @@ def test_add_decimal():
 def test_add_unknown_substance():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     with pytest.raises(Exception) as result:
         l.add("vsfd", 12.456)
 
     # Assert
-    assert str(result.value) == "No such substance in stock"
+    assert str(result.value) == "No such substance in stock or reactions"
 
 
 def test_add_negative_number():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     with pytest.raises(Exception) as result:
@@ -90,7 +111,10 @@ def test_add_negative_number():
 def test_add_too_precise_number():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     with pytest.raises(Exception) as result:
@@ -103,7 +127,10 @@ def test_add_too_precise_number():
 def test_add_invalid_parameter_type():
     #Arrange
     substances = ["toto", "tata"]
-    l = Laboratory(substances)
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
 
     # Act
     with pytest.raises(Exception) as result:
@@ -111,3 +138,34 @@ def test_add_invalid_parameter_type():
 
     # Assert
     assert str(result.value) == "The quantity must be a float and substance must be string"
+
+
+def test_add_reaction():
+    #Arrange
+    substances = ["toto", "tata"]
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
+
+    # Act
+    quantity = l.add("tutu", 2)
+
+    # Assert
+    assert quantity == {"name": "tutu", "quantity": 2}
+
+
+def test_add_reaction_non_existent():
+    #Arrange
+    substances = ["toto", "tata"]
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.add("vsfd", 12.456)
+
+    # Assert
+    assert str(result.value) == "No such substance in stock or reactions"
