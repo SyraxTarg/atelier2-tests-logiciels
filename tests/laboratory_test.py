@@ -169,3 +169,54 @@ def test_add_reaction_non_existent():
 
     # Assert
     assert str(result.value) == "No such substance in stock or reactions"
+
+
+def test_make():
+    #Arrange
+    substances = ["toto", "tata"]
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
+    l.add("toto", 3)
+    l.add("tata", 8)
+
+    #Act
+    result = l.make("tutu", 2)
+
+    # Assert
+    assert result == 2
+    assert l.getQuantity("toto") == 1
+    assert l.getQuantity("tata") == 4
+
+
+def test_make_unknown_subs():
+    #Arrange
+    substances = ["toto", "tata"]
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
+    l.add("toto", 3)
+    l.add("tata", 8)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.make("plop", 2)
+
+    assert str(result.value) == "No such substance in reactions"
+
+
+def test_make_too_few_ingredients():
+    #Arrange
+    substances = ["toto", "tata"]
+    reactions = {
+        "tutu" : [("toto", 1), ("tata", 2)]
+    }
+    l = Laboratory(substances, reactions)
+
+    # Act
+    with pytest.raises(Exception) as result:
+        l.make("tutu", 1)
+
+    assert str(result.value) == "Not enough tata, needed 2, possessed 1"
