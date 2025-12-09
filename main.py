@@ -83,20 +83,31 @@ class Laboratory():
         print(self.reactions[substance])
         ingredients = self.reactions[substance]
 
-        for ingredient in ingredients:
-            needed = ingredient[1] * quantity
-            possessed = self.getQuantity(ingredient[0])
+        needed_quantities = []
+        for name, amount in ingredients:
+            needed = amount * quantity
+            needed_quantities.append(needed)
+            possessed = self.getQuantity(name)
             if possessed < needed:
-                raise Exception(f"Not enough {ingredient[0]}, needed {needed}, possessed {possessed}")
-            index = self.check_existent_substance(ingredient[0])
-            self.stock[index]["quantity"] -= needed
+                raise Exception(f"Not enough {name}, needed {needed}, possessed {possessed}")
 
-        return 2
+        index_ingredients = 0
+        for using_name, using_amount in ingredients:
+            needed = needed_quantities[index_ingredients]
+            index = self.check_existent_substance(using_name)
+            self.stock[index]["quantity"] -= needed
+            index_ingredients += 1
+
+        self.add(substance, quantity)
+        print(self.stock)
+        return quantity
 
 substances = ["toto", "tata"]
 reactions = {
     "tutu" : [("toto", 1), ("tata", 2)]
 }
 l = Laboratory(substances, reactions)
+l.add("toto", 26)
+l.add("tata", 41)
 
 l.make("tutu", 12)
