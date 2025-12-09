@@ -2,10 +2,12 @@ import decimal
 
 class Laboratory():
 
-    def __init__(self, substances: list[str]):
+    def __init__(self, substances: list[str], reactions: dict):
 
         if substances == []:
             raise Exception("List can't be empty")
+
+        self.reactions = reactions
 
         self.stock = []
 
@@ -19,14 +21,24 @@ class Laboratory():
 
     def getQuantity(self, substance: str)-> float:
         index = self.check_existent_substance(substance)
-
+        print(index)
         quantity = self.stock[index]["quantity"]
+        print(self.stock[index])
         return quantity
 
     def check_decimal_number(self, number: float | int):
         d = decimal.Decimal(str(number))
         if d.as_tuple().exponent < -4:
             raise Exception("The quantity must be rounded to a maximum of four decimal places.")
+
+    def add_reaction_to_stock(self, substance: str):
+        self.stock.append(
+            {
+                "name": substance,
+                "quantity": 0
+            }
+        )
+        return (len(self.stock) - 1)
 
     def check_existent_substance(self, substance: str)->int:
         found_substance = ""
@@ -36,7 +48,16 @@ class Laboratory():
             if s["name"] == substance:
                 return index
         if found_substance == "":
-            raise Exception("No such substance in stock")
+            reaction_index = self.check_substance_in_reactions(substance)
+            if reaction_index:
+                return reaction_index
+            raise Exception("No such substance in stock or reactions")
+
+    def check_substance_in_reactions(self, substance: str):
+        for reaction in self.reactions:
+            print(reaction)
+            if reaction == substance:
+                return self.add_reaction_to_stock(reaction)
 
     def add(self, substance: str, quantity: int)->dict:
 
@@ -50,14 +71,10 @@ class Laboratory():
         self.stock[index]["quantity"] = quantity
         return self.stock[index]
 
+substances = ["toto", "tata"]
+reactions = {
+    "tutu" : [("toto", 1), ("tata", 2)]
+}
+l = Laboratory(substances, reactions)
 
-substances = [
-            "ethanol",
-            "copper",
-            "bleach",
-            "azote",
-            "salt",
-            "antimatter"
-        ]
-l = Laboratory(substances)
-l.getQuantity("azote")
+l.add("tutu", 12)
