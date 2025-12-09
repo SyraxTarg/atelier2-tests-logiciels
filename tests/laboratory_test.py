@@ -204,7 +204,7 @@ def test_make_unknown_subs():
     with pytest.raises(Exception) as result:
         l.make("plop", 2)
 
-    assert str(result.value) == "No such substance in reactions"
+    assert str(result.value) == "No such substance in stock or reactions"
 
 
 def test_make_too_few_ingredients():
@@ -214,9 +214,10 @@ def test_make_too_few_ingredients():
         "tutu" : [("toto", 1), ("tata", 2)]
     }
     l = Laboratory(substances, reactions)
+    l.add("toto", 5)
 
     # Act
     with pytest.raises(Exception) as result:
         l.make("tutu", 1)
 
-    assert str(result.value) == "Not enough tata, needed 2, possessed 1"
+    assert str(result.value) == "Not enough tata, needed 2, possessed 0"

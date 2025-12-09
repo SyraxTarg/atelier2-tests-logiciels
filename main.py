@@ -1,4 +1,5 @@
 import decimal
+import json
 
 class Laboratory():
 
@@ -71,10 +72,31 @@ class Laboratory():
         self.stock[index]["quantity"] = quantity
         return self.stock[index]
 
+    def make(self, substance: str, quantity: float | int) -> float | int:
+        self.check_decimal_number(quantity)
+        if (type(quantity) != float and type(quantity) != int) or type(substance) != str:
+            raise Exception("The quantity must be a float and substance must be string")
+        if quantity < 0:
+            raise Exception("Impossible to add negative quantities")
+
+        index = self.check_existent_substance(substance)
+        print(self.reactions[substance])
+        ingredients = self.reactions[substance]
+
+        for ingredient in ingredients:
+            needed = ingredient[1] * quantity
+            possessed = self.getQuantity(ingredient[0])
+            if possessed < needed:
+                raise Exception(f"Not enough {ingredient[0]}, needed {needed}, possessed {possessed}")
+            index = self.check_existent_substance(ingredient[0])
+            self.stock[index]["quantity"] -= needed
+
+        return 2
+
 substances = ["toto", "tata"]
 reactions = {
     "tutu" : [("toto", 1), ("tata", 2)]
 }
 l = Laboratory(substances, reactions)
 
-l.add("tutu", 12)
+l.make("tutu", 12)
